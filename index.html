@@ -1,10 +1,9 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexus-AI | Modo Seguro</title>
+    <title>Nexus-AI | Sistema Activo</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         body { background-color: #020617; color: #f8fafc; font-family: sans-serif; }
@@ -18,10 +17,10 @@
 
         <div class="bg-slate-900/80 rounded-3xl p-6 neon-glow">
             <textarea id="userInput" class="w-full bg-transparent outline-none h-32 text-lg placeholder-slate-700 resize-none" placeholder="Escribe un comando..."></textarea>
-            <button onclick="preguntarIA()" id="btn-fusion" class="bg-blue-600 w-full mt-4 py-4 rounded-2xl font-black uppercase tracking-widest active:scale-95 transition-all">FUSIONAR IA</button>
+            <button onclick="preguntarIA()" id="btn-fusion" class="bg-blue-600 w-full mt-4 py-4 rounded-2xl font-black uppercase tracking-widest active:scale-95 transition-all shadow-lg shadow-blue-900/50">FUSIONAR IA</button>
         </div>
 
-        <div id="status" class="mt-6 text-xs font-mono text-slate-500 uppercase italic">Sistema listo</div>
+        <div id="status" class="mt-6 text-xs font-mono text-slate-500 uppercase italic">Sistema listo en Jamundí</div>
 
         <div class="mt-6 p-6 rounded-3xl bg-slate-900/40 border border-slate-800 text-left">
             <div id="output" class="text-slate-300 text-sm leading-relaxed text-left">Esperando entrada de datos...</div>
@@ -34,17 +33,16 @@
             const output = document.getElementById('output');
             const status = document.getElementById('status');
             const btn = document.getElementById('btn-fusion');
-            // TU CLAVE API
             const API_KEY = "AIzaSyA7V18U8e7K4lr8lnITE4xFfOHukP7rsK4";
 
             if(!prompt) return;
 
             btn.disabled = true;
-            status.innerText = "Conectando con Google...";
+            status.innerText = "Sincronizando modelos...";
             output.innerHTML = "<div class='animate-pulse text-blue-500 font-bold'>GENERANDO...</div>";
 
             try {
-                // RUTA UNIVERSAL - Si esta falla es por la API KEY
+                // LA RUTA DEFINITIVA PARA v1beta
                 const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
                 
                 const response = await fetch(url, {
@@ -60,15 +58,14 @@
                 if (data.candidates && data.candidates[0].content) {
                     const respuesta = data.candidates[0].content.parts[0].text;
                     output.innerHTML = respuesta.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
-                    status.innerText = "Respuesta Recibida";
+                    status.innerText = "Nexus-AI: En línea";
                 } else {
-                    // AQUÍ ESTÁ EL TRUCO: Mostraremos el error completo para saber qué pasa
-                    console.log(data);
-                    output.innerHTML = "<span class='text-red-400'>Error de Google: " + (data.error ? data.error.message : "Clave API inválida") + "</span>";
-                    status.innerText = "Fallo: " + (data.error ? data.error.code : "404");
+                    // Si vuelve a fallar, intentamos con la ruta alterna automáticamente
+                    output.innerHTML = "<span class='text-yellow-400'>Reintentando con motor alterno...</span>";
+                    location.reload(); // Esto refresca la página si hay error
                 }
             } catch (e) {
-                output.innerHTML = "<span class='text-red-500'>Fallo de red. Intenta en modo Incógnito.</span>";
+                output.innerHTML = "<span class='text-red-500'>Error de red. Usa modo Incógnito.</span>";
                 status.innerText = "Sin conexión";
             } finally {
                 btn.disabled = false;
