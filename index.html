@@ -13,24 +13,24 @@
 <body class="p-6 flex flex-col items-center min-h-screen">
     <div class="max-w-md w-full">
         <header class="text-center mb-8">
-            <h1 class="text-4xl font-black text-blue-500">NEXUS-AI</h1>
-            <p class="text-gray-400 text-xs tracking-widest">MOTOR: GOOGLE GEMINI PRO</p>
+            <h1 class="text-4xl font-black text-blue-500 italic">NEXUS-AI</h1>
+            <p class="text-gray-400 text-xs tracking-widest uppercase">Motor: Google Gemini Pro</p>
         </header>
 
         <div class="bg-gray-900/50 rounded-3xl p-5 neon-border">
             <textarea id="userInput" class="w-full bg-transparent outline-none h-32 text-lg placeholder-gray-600 resize-none" placeholder="Pregúntame lo que quieras..."></textarea>
-            <button onclick="preguntarIA()" id="btn-fusion" class="bg-blue-600 w-full mt-4 py-3 rounded-2xl font-bold">FUSIONAR INTELIGENCIA</button>
+            <button onclick="preguntarIA()" id="btn-fusion" class="bg-blue-600 w-full mt-4 py-3 rounded-2xl font-bold uppercase tracking-widest">Fusionar Inteligencia</button>
         </div>
 
         <div class="mt-8 p-6 rounded-3xl bg-blue-900/10 border border-blue-500/20">
-            <h2 class="text-blue-400 font-bold text-sm mb-3">RESPUESTA NEXUS ✨</h2>
-            <p id="output" class="text-gray-300">Nexus-AI está listo para responder.</p>
+            <h2 class="text-blue-400 font-bold text-sm mb-3 uppercase">Respuesta Nexus ✨</h2>
+            <p id="output" class="text-gray-300 italic text-sm">Esperando comando...</p>
         </div>
     </div>
 
     <script>
-        // PEGA TU API KEY AQUÍ ABAJO ENTRE LAS COMILLAS
-        const MI_API_KEY = "TU_API_KEY_AQUÍ";
+        // TU API KEY YA ESTÁ CONFIGURADA AQUÍ ABAJO
+        const MI_API_KEY = "AIzaSyA7V18U8e7K4lr8lnITE4xFfOHukP7rsK4";
 
         async function preguntarIA() {
             const prompt = document.getElementById('userInput').value;
@@ -39,7 +39,7 @@
 
             if(!prompt) return alert("Escribe algo primero");
 
-            output.innerHTML = "Pensando...";
+            output.innerHTML = "<span class='animate-pulse text-blue-400'>Nexus está pensando...</span>";
             btn.disabled = true;
 
             try {
@@ -55,7 +55,7 @@
                 const textoFinal = data.candidates[0].content.parts[0].text;
                 output.innerHTML = textoFinal.replace(/\n/g, '<br>');
             } catch (error) {
-                output.innerHTML = "Error: Asegúrate de que la API Key sea correcta.";
+                output.innerHTML = "Error: Verifica tu conexión o la API Key.";
             } finally {
                 btn.disabled = false;
             }
@@ -63,4 +63,5 @@
     </script>
 </body>
 </html>
+
 
