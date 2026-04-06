@@ -1,0 +1,68 @@
+DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus-AI | Fusionando el Futuro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #0f172a; color: #f8fafc; font-family: sans-serif; }
+        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .neon-border { border: 1px solid #3b82f6; box-shadow: 0 0 15px rgba(59, 130, 246, 0.3); }
+    </style>
+</head>
+<body class="p-6 flex flex-col items-center min-h-screen">
+    
+    <div class="max-w-md w-full">
+        <header class="text-center mb-8">
+            <h1 class="text-4xl font-black tracking-tighter text-blue-500 uppercase">Nexus-AI</h1>
+            <p class="text-gray-400 text-xs mt-1 uppercase tracking-widest">Ecosistema de IA Multimodal</p>
+        </header>
+
+        <div class="flex gap-3 overflow-x-auto mb-8 pb-2 no-scrollbar">
+            <button class="glass px-5 py-2 rounded-2xl text-sm whitespace-nowrap hover:bg-blue-600 transition">🌿 Biología</button>
+            <button class="glass px-5 py-2 rounded-2xl text-sm whitespace-nowrap hover:bg-blue-600 transition">📐 Matemáticas</button>
+            <button class="glass px-5 py-2 rounded-2xl text-sm whitespace-nowrap hover:bg-blue-600 transition">💻 Tecnología</button>
+        </div>
+
+        <div class="bg-gray-900/50 rounded-3xl p-5 neon-border">
+            <textarea id="userInput" class="w-full bg-transparent outline-none h-32 text-lg placeholder-gray-600 resize-none" placeholder="¿Qué quieres fusionar hoy?"></textarea>
+            
+            <div class="flex justify-between items-center mt-4 pt-4 border-t border-gray-800">
+                <div class="flex gap-4 text-xl">
+                    <button class="hover:text-blue-400 transition">🖼️</button>
+                    <button class="hover:text-blue-400 transition">🎙️</button>
+                </div>
+                <button onclick="fusionar()" class="bg-blue-600 hover:bg-blue-500 px-8 py-3 rounded-2xl font-bold transition shadow-lg shadow-blue-900/50">
+                    FUSIONAR IA
+                </button>
+            </div>
+        </div>
+
+        <div class="mt-8 p-6 rounded-3xl bg-blue-900/10 border border-blue-500/20">
+            <h2 class="text-blue-400 font-bold text-sm mb-3 uppercase tracking-wider">Respuesta Nexus ✨</h2>
+            <p id="output" class="text-gray-300 italic leading-relaxed">
+                Esperando comando de entrada para procesar con ChatGPT y Gemini...
+            </p>
+        </div>
+    </div>
+
+    <script>
+        function fusionar() {
+            const input = document.getElementById('userInput').value;
+            const output = document.getElementById('output');
+            
+            if(input.trim() === "") {
+                alert("Por favor, escribe una pregunta para Nexus.");
+                return;
+            }
+
+            output.innerHTML = "Fusionando modelos de IA... <span class='text-blue-400 animate-pulse'>⚡</span>";
+            
+            setTimeout(() => {
+                output.innerText = "¡Nexus-AI ha procesado tu consulta con éxito! (Conexión con Vercel lista).";
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
