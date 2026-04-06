@@ -75,3 +75,114 @@
     </script>
 </body>
 </html>
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexus-AI | Multi-Materia</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = { darkMode: 'class' }
+    </script>
+    <style>
+        .neon-blue { box-shadow: 0 0 15px rgba(59, 130, 246, 0.5); }
+        .subject-btn { transition: all 0.2s; border: 1px solid rgba(255,255,255,0.1); }
+        .subject-btn:active { scale: 0.95; }
+    </style>
+</head>
+<body class="bg-slate-50 dark:bg-slate-950 text-slate-900 dark:text-slate-100 min-h-screen transition-colors duration-300">
+
+    <nav class="p-4 flex justify-between items-center max-w-4xl mx-auto">
+        <h1 class="text-2xl font-black italic text-blue-600">NEXUS-AI</h1>
+        <button onclick="document.documentElement.classList.toggle('dark')" class="p-2 bg-slate-200 dark:bg-slate-800 rounded-full">🌓</button>
+    </nav>
+
+    <main class="max-w-md mx-auto p-6">
+        
+        <div class="grid grid-cols-2 gap-3 mb-6">
+            <button onclick="setMateria('Matemáticas 📐')" class="subject-btn p-3 rounded-2xl bg-white dark:bg-slate-900 shadow-sm">Matemáticas 📐</button>
+            <button onclick="setMateria('Biología 🧬')" class="subject-btn p-3 rounded-2xl bg-white dark:bg-slate-900 shadow-sm">Biología 🧬</button>
+            <button onclick="setMateria('Lenguaje 📚')" class="subject-btn p-3 rounded-2xl bg-white dark:bg-slate-900 shadow-sm">Lenguaje 📚</button>
+            <button onclick="setMateria('Inglés 🇬🇧')" class="subject-btn p-3 rounded-2xl bg-white dark:bg-slate-900 shadow-sm">Inglés 🇬🇧</button>
+        </div>
+
+        <div class="bg-white dark:bg-slate-900 rounded-3xl p-4 shadow-xl border border-slate-200 dark:border-slate-800">
+            <div id="materia-actual" class="text-xs font-bold text-blue-500 mb-2 uppercase tracking-widest text-center">Selecciona una materia</div>
+            
+            <textarea id="userInput" class="w-full bg-transparent border-none outline-none h-24 resize-none" placeholder="Haz tu pregunta..."></textarea>
+            
+            <div class="flex gap-2 mt-2">
+                <label class="cursor-pointer bg-slate-100 dark:bg-slate-800 p-3 rounded-xl flex-1 text-center">
+                    📷 <input type="file" accept="image/*" class="hidden" onchange="handleImage(this)">
+                </label>
+                <button onclick="startVoice()" class="bg-slate-100 dark:bg-slate-800 p-3 rounded-xl flex-1">🎤</button>
+            </div>
+
+            <button onclick="preguntarIA()" id="btn-main" class="w-full mt-4 bg-blue-600 text-white py-4 rounded-2xl font-bold hover:bg-blue-700 transition-all">FUSIONAR IA (Gemini + GPT)</button>
+        </div>
+
+        <div class="mt-6 p-4 rounded-2xl bg-gradient-to-r from-amber-400 to-orange-500 text-white shadow-lg">
+            <div class="flex justify-between items-center">
+                <div>
+                    <p class="font-bold">Nexus Pro ✨</p>
+                    <p class="text-xs">Respuestas 2x más rápidas</p>
+                </div>
+                <button onclick="window.location.href='https://paypal.me/tu-cuenta/5'" class="bg-white text-orange-600 px-4 py-2 rounded-xl font-black text-sm">$5 USD</button>
+            </div>
+        </div>
+
+        <div id="output" class="mt-6 p-6 rounded-3xl bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-800 text-sm leading-relaxed min-h-[100px]">
+            La respuesta aparecerá aquí...
+        </div>
+    </main>
+
+    <script>
+        let materiaSeleccionada = "";
+        const API_KEY = "TU_API_KEY_AQUI"; // REEMPLAZA CON TU KEY
+
+        function setMateria(m) {
+            materiaSeleccionada = m;
+            document.getElementById('materia-actual').innerText = "Modo: " + m;
+        }
+
+        function startVoice() {
+            const recognition = new (window.SpeechRecognition || window.webkitSpeechRecognition)();
+            recognition.lang = 'es-ES';
+            recognition.onresult = (event) => {
+                document.getElementById('userInput').value = event.results[0][0].transcript;
+            };
+            recognition.start();
+        }
+
+        async function preguntarIA() {
+            const input = document.getElementById('userInput').value;
+            const output = document.getElementById('output');
+            if(!input) return;
+
+            output.innerHTML = "<span class='animate-pulse'>Procesando con algoritmos combinados...</span>";
+
+            try {
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: `Actúa como una fusión de ChatGPT y Gemini experto en ${materiaSeleccionada}. Pregunta: ${input}` }] }]
+                    })
+                });
+                const data = await response.json();
+                output.innerText = data.candidates[0].content.parts[0].text;
+            } catch (e) {
+                output.innerText = "Error al conectar con el núcleo de IA.";
+            }
+        }
+
+        function handleImage(input) {
+            if (input.files && input.files[0]) {
+                document.getElementById('output').innerText = "Imagen cargada: " + input.files[0].name + ". (Para analizarla necesitas convertirla a Base64 en el código)";
+            }
+        }
+    </script>
+</body>
+</html>
