@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -38,12 +39,12 @@
             if(!prompt) return;
 
             btn.disabled = true;
-            status.innerText = "Sincronizando modelos...";
+            status.innerText = "Sincronizando con Google v1...";
             output.innerHTML = "<div class='animate-pulse text-blue-500 font-bold'>GENERANDO...</div>";
 
             try {
-                // LA RUTA DEFINITIVA PARA v1beta
-                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+                // RUTA ESTABLE v1 (La más confiable)
+                const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
                 
                 const response = await fetch(url, {
                     method: 'POST',
@@ -58,14 +59,14 @@
                 if (data.candidates && data.candidates[0].content) {
                     const respuesta = data.candidates[0].content.parts[0].text;
                     output.innerHTML = respuesta.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
-                    status.innerText = "Nexus-AI: En línea";
+                    status.innerText = "Nexus-AI: Conexión Exitosa";
                 } else {
-                    // Si vuelve a fallar, intentamos con la ruta alterna automáticamente
-                    output.innerHTML = "<span class='text-yellow-400'>Reintentando con motor alterno...</span>";
-                    location.reload(); // Esto refresca la página si hay error
+                    // Si falla, mostramos el error técnico para saber qué pasó
+                    output.innerHTML = "<span class='text-red-400 font-bold'>Error técnico:</span><br>" + (data.error ? data.error.message : "Modelo no disponible");
+                    status.innerText = "Fallo en el motor";
                 }
             } catch (e) {
-                output.innerHTML = "<span class='text-red-500'>Error de red. Usa modo Incógnito.</span>";
+                output.innerHTML = "<span class='text-red-500 italic'>Error de red. Usa modo Incógnito.</span>";
                 status.innerText = "Sin conexión";
             } finally {
                 btn.disabled = false;
