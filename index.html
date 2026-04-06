@@ -18,12 +18,12 @@
         </header>
 
         <div class="bg-gray-900/50 rounded-3xl p-5 neon-border">
-            <textarea id="userInput" class="w-full bg-transparent outline-none h-32 text-lg placeholder-gray-600 resize-none" placeholder="Pregúntale a Nexus..."></textarea>
+            <textarea id="userInput" class="w-full bg-transparent outline-none h-32 text-lg placeholder-gray-600 resize-none" placeholder="Escribe tu comando..."></textarea>
             <button onclick="preguntarIA()" id="btn-fusion" class="bg-blue-600 w-full mt-4 py-4 rounded-2xl font-bold uppercase tracking-widest active:scale-95 transition-all">Fusionar Inteligencia</button>
         </div>
 
         <div class="mt-8 p-6 rounded-3xl bg-blue-900/10 border border-blue-500/20">
-            <h2 class="text-blue-400 font-bold text-sm mb-3 uppercase tracking-widest">Respuesta Nexus ✨</h2>
+            <h2 class="text-blue-400 font-bold text-sm mb-3 uppercase tracking-widest text-center">Respuesta Nexus ✨</h2>
             <div id="output" class="text-gray-300 text-sm leading-relaxed text-left">Esperando comando desde Jamundí...</div>
         </div>
     </div>
@@ -38,13 +38,13 @@
 
             if(!prompt) return alert("Escribe algo primero.");
 
-            output.innerHTML = "<span class='animate-pulse text-blue-400 font-bold'>GENERANDO RESPUESTA...</span>";
+            output.innerHTML = "<span class='animate-pulse text-blue-400 font-bold text-center block'>GENERANDO RESPUESTA...</span>";
             btn.disabled = true;
             btn.style.opacity = "0.5";
 
             try {
-                // Dirección actualizada a la versión 1 (más estable)
-                const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${MI_API_KEY}`;
+                // DIRECCIÓN ACTUALIZADA CON 'LATEST'
+                const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash-latest:generateContent?key=${MI_API_KEY}`;
                 
                 const response = await fetch(url, {
                     method: 'POST',
@@ -57,13 +57,15 @@
                 const data = await response.json();
                 
                 if (data.error) {
-                    output.innerHTML = "<span class='text-red-400 font-bold'>Error de Google:</span><br>" + data.error.message;
-                } else {
+                    output.innerHTML = "<span class='text-red-400'>Error de Google: " + data.error.message + "</span>";
+                } else if (data.candidates && data.candidates[0].content) {
                     const textoFinal = data.candidates[0].content.parts[0].text;
                     output.innerHTML = textoFinal.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
+                } else {
+                    output.innerHTML = "La IA no pudo generar una respuesta. Intenta con otro tema.";
                 }
             } catch (error) {
-                output.innerHTML = "<span class='text-red-500 italic'>Error de conexión. Intenta de nuevo.</span>";
+                output.innerHTML = "<span class='text-red-500 italic'>Error de conexión.</span>";
             } finally {
                 btn.disabled = false;
                 btn.style.opacity = "1";
@@ -72,5 +74,6 @@
     </script>
 </body>
 </html>
+
 
    
