@@ -40,11 +40,10 @@
 
             output.innerHTML = "<span class='animate-pulse text-blue-400 font-bold text-center block'>GENERANDO RESPUESTA...</span>";
             btn.disabled = true;
-            btn.style.opacity = "0.5";
 
             try {
-                // DIRECCIÓN ACTUALIZADA CON 'LATEST'
-                const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash-latest:generateContent?key=${MI_API_KEY}`;
+                // NOMBRE DE MODELO CORREGIDO PARA VERSIÓN 1
+                const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${MI_API_KEY}`;
                 
                 const response = await fetch(url, {
                     method: 'POST',
@@ -62,18 +61,14 @@
                     const textoFinal = data.candidates[0].content.parts[0].text;
                     output.innerHTML = textoFinal.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
                 } else {
-                    output.innerHTML = "La IA no pudo generar una respuesta. Intenta con otro tema.";
+                    output.innerHTML = "No se pudo generar respuesta. Intenta de nuevo.";
                 }
             } catch (error) {
                 output.innerHTML = "<span class='text-red-500 italic'>Error de conexión.</span>";
             } finally {
                 btn.disabled = false;
-                btn.style.opacity = "1";
             }
         }
     </script>
 </body>
 </html>
-
-
-   
