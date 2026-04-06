@@ -12,15 +12,15 @@
 </head>
 <body class="p-6 flex flex-col items-center min-h-screen justify-center">
     <div class="max-w-md w-full text-center">
-        <h1 class="text-5xl font-black text-blue-600 italic mb-2 tracking-tighter text-center w-full">NEXUS-AI</h1>
-        <p class="text-blue-400 text-xs font-bold tracking-[0.3em] uppercase mb-8 text-center w-full">Intelligence Engine</p>
+        <h1 class="text-5xl font-black text-blue-600 italic mb-2 tracking-tighter">NEXUS-AI</h1>
+        <p class="text-blue-400 text-xs font-bold tracking-[0.3em] uppercase mb-8">Intelligence Engine</p>
 
         <div class="bg-slate-900/80 rounded-3xl p-6 neon-glow">
             <textarea id="userInput" class="w-full bg-transparent outline-none h-32 text-lg placeholder-slate-700 resize-none" placeholder="Escribe un comando..."></textarea>
             <button onclick="preguntarIA()" id="btn-fusion" class="bg-blue-600 w-full mt-4 py-4 rounded-2xl font-black uppercase tracking-widest active:scale-95 transition-all">FUSIONAR IA</button>
         </div>
 
-        <div id="status" class="mt-6 text-xs font-mono text-slate-500 uppercase italic">Sistema listo</div>
+        <div id="status" class="mt-6 text-xs font-mono text-slate-500 uppercase italic text-center w-full">Sistema listo</div>
 
         <div class="mt-6 p-6 rounded-3xl bg-slate-900/40 border border-slate-800 text-left">
             <div id="output" class="text-slate-300 text-sm leading-relaxed text-left">Esperando entrada de datos...</div>
@@ -38,12 +38,12 @@
             if(!prompt) return;
 
             btn.disabled = true;
-            status.innerText = "Conectando con Google...";
+            status.innerText = "Sincronizando v1beta...";
             output.innerHTML = "<div class='animate-pulse text-blue-500 font-bold'>GENERANDO...</div>";
 
             try {
-                // CAMBIO CLAVE: Usamos v1 y gemini-1.5-flash (el estándar actual)
-                const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+                // RUTA V1BETA - LA MÁS COMPATIBLE
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
                 
                 const response = await fetch(url, {
                     method: 'POST',
@@ -57,16 +57,15 @@
                 
                 if (data.candidates && data.candidates[0].content) {
                     const respuesta = data.candidates[0].content.parts[0].text;
-                    // Esto limpia el texto y pone negritas
                     output.innerHTML = respuesta.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
-                    status.innerText = "Respuesta recibida";
+                    status.innerText = "Nexus-AI: Conectado";
                 } else {
-                    // Si falla, mostramos el error técnico para saber qué pasó
-                    output.innerHTML = "<span class='text-red-400'>Error de Google: " + (data.error ? data.error.message : "Intenta con gemini-1.5-flash") + "</span>";
+                    // Si falla, aquí veremos el error exacto
+                    output.innerHTML = "<span class='text-red-400'>Error Técnico: " + (data.error ? data.error.message : "Modelo no soportado") + "</span>";
                     status.innerText = "Fallo en el motor";
                 }
             } catch (e) {
-                output.innerHTML = "<span class='text-red-500'>Error de red. Prueba en modo incógnito.</span>";
+                output.innerHTML = "<span class='text-red-500 italic'>Error de red. Prueba en incógnito.</span>";
                 status.innerText = "Fallo total";
             } finally {
                 btn.disabled = false;
