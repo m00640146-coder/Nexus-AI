@@ -33,6 +33,7 @@
             const output = document.getElementById('output');
             const status = document.getElementById('status');
             const btn = document.getElementById('btn-fusion');
+            // TU CLAVE API REAL
             const API_KEY = "AIzaSyA7V18U8e7K4lr8lnITE4xFfOHukP7rsK4";
 
             if(!prompt) return;
@@ -42,7 +43,7 @@
             output.innerHTML = "<div class='animate-pulse text-blue-500 font-bold'>GENERANDO...</div>";
 
             try {
-                // RUTA ESTÁNDAR V1 - Es la más estable de todas
+                // CAMBIO CLAVE: Usamos la ruta estable v1 y el modelo correcto
                 const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
                 
                 const response = await fetch(url, {
@@ -57,6 +58,7 @@
                 
                 if (data.candidates && data.candidates[0].content) {
                     const respuesta = data.candidates[0].content.parts[0].text;
+                    // Esto limpia el texto para que los asteriscos se vuelvan negritas
                     output.innerHTML = respuesta.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
                     status.innerText = "Nexus-AI: Conexión Exitosa";
                 } else {
