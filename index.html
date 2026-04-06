@@ -17,10 +17,10 @@
 
         <div class="bg-slate-900/80 rounded-3xl p-6 neon-glow">
             <textarea id="userInput" class="w-full bg-transparent outline-none h-32 text-lg placeholder-slate-700 resize-none" placeholder="Escribe un comando..."></textarea>
-            <button onclick="preguntarIA()" id="btn-fusion" class="bg-blue-600 w-full mt-4 py-4 rounded-2xl font-black uppercase tracking-widest hover:bg-blue-500 active:scale-95 transition-all shadow-lg shadow-blue-900/50">FUSIONAR IA</button>
+            <button onclick="preguntarIA()" id="btn-fusion" class="bg-blue-600 w-full mt-4 py-4 rounded-2xl font-black uppercase tracking-widest active:scale-95 transition-all">FUSIONAR IA</button>
         </div>
 
-        <div id="status" class="mt-6 text-xs font-mono text-slate-500 uppercase italic">Esperando comando desde Jamundí...</div>
+        <div id="status" class="mt-6 text-xs font-mono text-slate-500 uppercase italic">Sistema listo</div>
 
         <div class="mt-6 p-6 rounded-3xl bg-slate-900/40 border border-slate-800 text-left">
             <div id="output" class="text-slate-300 text-sm leading-relaxed">Esperando entrada de datos...</div>
@@ -33,18 +33,17 @@
             const output = document.getElementById('output');
             const status = document.getElementById('status');
             const btn = document.getElementById('btn-fusion');
-            // TU CLAVE API REAL
             const API_KEY = "AIzaSyA7V18U8e7K4lr8lnITE4xFfOHukP7rsK4";
 
             if(!prompt) return;
 
             btn.disabled = true;
-            status.innerText = "Sincronizando con Google v1...";
+            status.innerText = "Conectando con Google...";
             output.innerHTML = "<div class='animate-pulse text-blue-500 font-bold'>GENERANDO...</div>";
 
             try {
-                // CAMBIO CLAVE: Usamos la ruta estable v1 y el modelo correcto
-                const url = `https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+                // CAMBIO CLAVE: Usamos gemini-pro en v1beta
+                const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEY}`;
                 
                 const response = await fetch(url, {
                     method: 'POST',
@@ -58,16 +57,16 @@
                 
                 if (data.candidates && data.candidates[0].content) {
                     const respuesta = data.candidates[0].content.parts[0].text;
-                    // Esto limpia el texto para que los asteriscos se vuelvan negritas
                     output.innerHTML = respuesta.replace(/\n/g, '<br>').replace(/\*\*(.*?)\*\*/g, '<b>$1</b>');
-                    status.innerText = "Nexus-AI: Conexión Exitosa";
+                    status.innerText = "Respuesta recibida";
                 } else {
-                    output.innerHTML = "<span class='text-red-400'>Error de Google: " + (data.error ? data.error.message : "Modelo no disponible") + "</span>";
-                    status.innerText = "Fallo en la respuesta";
+                    // Si falla, aquí nos dirá exactamente por qué
+                    output.innerHTML = "<span class='text-red-400'>Error: " + (data.error ? data.error.message : "No se encontró el modelo") + "</span>";
+                    status.innerText = "Fallo en el motor";
                 }
             } catch (e) {
-                output.innerHTML = "<span class='text-red-500'>Fallo de red. Prueba en modo incógnito.</span>";
-                status.innerText = "Error de enlace";
+                output.innerHTML = "<span class='text-red-500'>Fallo de conexión. Revisa tu internet.</span>";
+                status.innerText = "Error de red";
             } finally {
                 btn.disabled = false;
             }
